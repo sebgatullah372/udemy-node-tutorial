@@ -10,6 +10,7 @@ app.use(express.json());
 
 // Parse URL-encoded request bodies (for form submissions)
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/admin', adminRoutes); // /admin is the route prefix
 app.use(shopRoutes);

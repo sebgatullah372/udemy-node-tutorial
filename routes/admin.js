@@ -4,7 +4,7 @@ const rootDir = require('../utils/path');
 const router = express.Router();
 
 router.use('/users', (req, res, next) => {
-    res.send('<h1>Express Users Page</h1>')
+    res.sendFile(path.join(rootDir, 'views', 'users.html'));
 });
 
 router.use('/add-product', (req, res, next)=> {

@@ -1,10 +1,11 @@
 const express = require('express');
 const path = require('path');
-const adminRoutes = require('./routes/admin');
+const adminData = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 
 const app = express();
 
+app.set('view engine', 'pug');
 // Parse JSON request bodies
 app.use(express.json());
 
@@ -12,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/admin', adminRoutes); // /admin is the route prefix
+app.use('/admin', adminData.routes); // /admin is the route prefix
 app.use(shopRoutes);
 
 app.use((req, res, next)=>{

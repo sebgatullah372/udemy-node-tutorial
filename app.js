@@ -17,7 +17,8 @@ app.use('/admin', adminData.routes); // /admin is the route prefix
 app.use(shopRoutes);
 
 app.use((req, res, next)=>{
-    res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+    // res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
+    res.status(404).render('404', {page_title: 'Page not found'});
 })
 
 app.listen(3000);

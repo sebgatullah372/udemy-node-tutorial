@@ -10,7 +10,8 @@ router.use('/users', (req, res, next) => {
 
 router.get('/add-product', (req, res, next)=> {
     // res.send('<form action="/product" method="POST"><input type="text" name="product"/><button type="submit">Add</button></form>');
-    res.sendFile(path.join(rootDir, 'views', 'add-product.html'));
+    // res.sendFile(path.join(rootDir, 'views', 'add-product.html'));
+    res.render('add-product', { page_title: 'Add Product', route_name: 'admin.add-product'});
 });
 router.post('/add-product', (req, res, next)=>{
     products.push({title: req.body.title});

@@ -1,5 +1,6 @@
-const products = [];
+const Product = require('../models/product');
 exports.index = (req, res, next) => {
+    const products = Product.fetchAll();
     res.render('shop', {prods: products, page_title: 'Shop', route_name: 'shop'});
 }
 
@@ -8,6 +9,7 @@ exports.create = (req, res, next) => {
 };
 
 exports.store = (req, res, next) => {
-    products.push({title: req.body.title});
+    const product = new Product(req.body.title);
+    product.save();
     res.redirect('/');
 };

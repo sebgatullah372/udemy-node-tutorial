@@ -5,7 +5,8 @@ const shopRoutes = require('./routes/shop');
 
 const app = express();
 
-app.set('view engine', 'pug');
+// app.set('view engine', 'pug');
+app.set('view engine', 'ejs');
 // Parse JSON request bodies
 app.use(express.json());
 
@@ -18,7 +19,7 @@ app.use(shopRoutes);
 
 app.use((req, res, next)=>{
     // res.status(404).sendFile(path.join(__dirname, 'views', '404.html'));
-    res.status(404).render('404', {page_title: 'Page not found'});
+    res.status(404).render('404', {page_title: 'Page not found', route_name : ''});
 })
 
 app.listen(3000);

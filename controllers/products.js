@@ -1,7 +1,7 @@
 const Product = require('../models/product');
 exports.index = (req, res, next) => {
     const products = Product.fetchAll();
-    res.render('shop', {prods: products, page_title: 'Shop', route_name: 'shop'});
+    res.render('shop', {prods: products, hasProducts: products.length > 0, page_title: 'Shop', route_name: 'shop'});
 }
 
 exports.create = (req, res, next) => {

@@ -20,3 +20,11 @@ exports.addToCart = (req, res, next) => {
     }
 
 }
+
+exports.removeFromCart = (req, res, next) => {
+    const productId = req.body.productId;
+    const product = Product.findById(productId);
+    const quantity = 1;
+    Cart.removeFromCart(product, quantity);
+    res.redirect('/my-cart');
+}

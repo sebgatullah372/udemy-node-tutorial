@@ -31,6 +31,14 @@
                             <td><%= cartItem.quantity * cartItem.product.price %></td>
                             <td>
                                 <a href="/products/<%= cartItem.product.id %>" class="btn">Details</a>
+                                <form action="/add-to-cart" method="POST">
+                                    <button class="btn">+</button>
+                                    <input type="hidden" name="productId" value="<%= cartItem.product.id %>">
+                                </form>
+                                <form action="/remove-from-cart" method="POST">
+                                    <button class="btn">-</button>
+                                    <input type="hidden" name="productId" value="<%= cartItem.product.id %>">
+                                </form>
                             </td>
                         </tr>
                     <% } %>

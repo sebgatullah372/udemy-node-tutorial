@@ -17,9 +17,6 @@ const product = class Product {
     }
 
     static findById(id) {
-        console.log('prods', products);
-        console.log('id', id);
-        console.log('find', products.find(p => p.id === id));
         return products.find(p => p.id === id);
     }
 }

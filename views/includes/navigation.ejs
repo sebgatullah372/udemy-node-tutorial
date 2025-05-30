@@ -3,8 +3,10 @@
         <ul class="main-header__item-list">
             <li class="main-header__item"><a class="<%= route_name === 'shop.product_index' ? 'active' :'' %>"
                     href="/">Shop</a></li>
+            <li class="main-header__item"><a class="<%= route_name === 'shop.my_cart' ? 'active' :'' %>"
+                    href="/my-cart">My Cart</a></li>
             <li class="main-header__item"><a class="<%= route_name === 'admin.product_index' ? 'active' :'' %>"
-                    href="/admin/products">Products</a></li>
+                    href="/admin/products">Admin Products</a></li>
             <li class="main-header__item"><a class="<%= route_name === 'admin.add-product' ? 'active' :'' %>"
                     href="/admin/add-product">Add Product</a></li>
         </ul>

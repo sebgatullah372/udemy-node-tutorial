@@ -20,3 +20,31 @@ exports.store = (req, res, next) => {
     product.save();
     res.redirect('/');
 };
+
+exports.edit = (req, res, next) => {
+    const id = req.params.id;
+    const product = Product.findById(id);
+    if (!product) {
+        return res.status(404).render('404', { page_title: 'Product Not Found', route_name: 'error' });
+    }
+    res.render('admin/edit-product', { product: product, page_title: 'Edit Product', route_name: 'admin.edit-product' });
+}
+
+exports.update = (req, res, next) => {
+    const id = req.params.id;
+    const product = Product.findById(id);
+    if (!product) {
+        return res.status(404).render('404', { page_title: 'Product Not Found', route_name: 'error' });
+    }
+    product.update(req.body);
+    res.redirect('/admin/products');
+}
+exports.delete = (req, res, next) => {
+    const id = req.params.id;
+    const product = Product.findById(id);
+    if (!product) {
+        return res.status(404).render('404', { page_title: 'Product Not Found', route_name: 'error' });
+    }
+    Product.delete(id);
+    res.redirect('/admin/products');
+}

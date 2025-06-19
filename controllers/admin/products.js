@@ -1,7 +1,11 @@
 const Product = require('../../models/product');
 exports.index = (req, res, next) => {
-    const products = Product.fetchAll();
-    res.render('admin/product-index', {prods: products, hasProducts: products.length > 0, page_title: 'Shop', route_name: 'admin.product_index'});
+    Product.fetchAll().then(([products, _]) => {
+        res.render('admin/product-index', {prods: products, hasProducts: products.length > 0, page_title: 'Admin Products', route_name: 'admin.product_index'});
+    }).catch(err => {
+        console.error('Error fetching products:', err);
+        res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+    });
 }
 
 exports.create = (req, res, next) => {
@@ -10,41 +14,52 @@ exports.create = (req, res, next) => {
 
 exports.store = (req, res, next) => {
     const newProduct = {
-        id: String(Date.now() + Math.floor(Math.random() * 1000)),
         title: req.body.title,
         imageUrl: req.body.imageUrl,
         price: req.body.price,
         description: req.body.description
     }
-    const product = new Product(newProduct);
-    product.save();
+    Product.create(newProduct).then(() => {
+        console.log('Product created successfully');
+    }).catch(err => {
+        console.error('Error creating product:', err);
+        return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+    });
     res.redirect('/');
 };
 
 exports.edit = (req, res, next) => {
     const id = req.params.id;
-    const product = Product.findById(id);
-    if (!product) {
-        return res.status(404).render('404', { page_title: 'Product Not Found', route_name: 'error' });
-    }
-    res.render('admin/edit-product', { product: product, page_title: 'Edit Product', route_name: 'admin.edit-product' });
+    Product.findById(id).then(([rows, _]) => {
+        const product = rows[0];
+        if (!product) {
+            return res.status(404).render('404', { page_title: 'Product Not Found', route_name: 'error' });
+        }
+        res.render('admin/edit-product', { product: product, page_title: 'Edit Product', route_name: 'admin.edit-product' });
+    }).catch(err => {
+        console.error('Error fetching product:', err);
+        return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+    });  
 }
 
 exports.update = (req, res, next) => {
     const id = req.params.id;
-    const product = Product.findById(id);
-    if (!product) {
-        return res.status(404).render('404', { page_title: 'Product Not Found', route_name: 'error' });
-    }
-    product.update(req.body);
+    
+    Product.update(req.body, id).then(() => {
+        console.log('Product updated successfully');
+    }).catch(err => {
+        console.error('Error updating product:', err);
+        return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+    });
     res.redirect('/admin/products');
 }
 exports.delete = (req, res, next) => {
     const id = req.params.id;
-    const product = Product.findById(id);
-    if (!product) {
-        return res.status(404).render('404', { page_title: 'Product Not Found', route_name: 'error' });
-    }
-    Product.delete(id);
+    Product.delete(id).then(() => {
+        console.log('Product deleted successfully');
+    }).catch(err => {
+        console.error('Error deleting product:', err);
+        return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+    });
     res.redirect('/admin/products');
 }

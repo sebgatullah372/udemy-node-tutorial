@@ -1,36 +1,27 @@
-const products = [];
+const db = require('../utils/db_connection');
 const product = class Product {
-    constructor(p){
-        this.id = p.id;
-        this.title = p.title;
-        this.imageUrl = p.imageUrl;
-        this.price = p.price;
-        this.description = p.description;  
-    }
-
-    save() {
-        products.push(this);
-    }
-
     static fetchAll() {
-        return products;
+        const query = 'SELECT * FROM products';
+        return db.execute(query); 
     }
 
     static findById(id) {
-        return products.find(p => p.id === id);
+        const query = 'SELECT * FROM products WHERE id = ?';
+        return db.execute(query, [id]);
     }
 
-    update(p) {
-        this.title = p.title;
-        this.imageUrl = p.imageUrl;
-        this.price = p.price;
-        this.description = p.description;
+    static create(p) {
+        const query = 'INSERT INTO products (title, image_url, price, description) VALUES (?, ?, ?, ?)';
+        return db.execute(query, [p.title, p.imageUrl, p.price, p.description]);
+    }
+
+    static update(p , id) {
+        const query = 'UPDATE products SET title = ?, image_url = ?, price = ?, description = ? WHERE id = ?';
+        return db.execute(query, [p.title, p.imageUrl, p.price, p.description, id]);
     }
     static delete(id) {
-        const index = products.findIndex(p => p.id === id);
-        if (index !== -1) {
-            products.splice(index, 1);
-        }
+        const query = 'DELETE FROM products WHERE id = ?';
+        return db.execute(query, [id]);
     }
 }
 

@@ -1,11 +1,6 @@
 const Product = require('../../models/product');
 exports.index = (req, res, next) => {
-    Product.fetchAll().then(([products, _]) => {
-        res.render('admin/product-index', {prods: products, hasProducts: products.length > 0, page_title: 'Admin Products', route_name: 'admin.product_index'});
-    }).catch(err => {
-        console.error('Error fetching products:', err);
-        res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
-    });
+   
 }
 
 exports.create = (req, res, next) => {

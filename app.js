@@ -3,6 +3,7 @@ const path = require('path');
 const adminRoutes = require('./routes/admin');
 const shopRoutes = require('./routes/shop');
 const sequelize = require('./utils/db_connection');
+const models = require('./models'); // Import all models to ensure they are registered
 const app = express();
 
 // app.set('view engine', 'pug');

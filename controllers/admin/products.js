@@ -18,7 +18,8 @@ exports.store = (req, res, next) => {
         title: req.body.title,
         image_url: req.body.imageUrl,
         price: req.body.price,
-        description: req.body.description
+        description: req.body.description,
+        user_id: req.user.id
     }
     Product.create(newProduct).then(() => {
         console.log('Product created successfully');

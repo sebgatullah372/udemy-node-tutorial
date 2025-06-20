@@ -1,6 +1,6 @@
 const Product = require('../../models/product');
 exports.index = (req, res, next) => {
-    Product.fetchAll().then(([products, _]) => {
+    Product.findAll().then(products => {
         res.render('shop/product-index', {prods: products, hasProducts: products.length > 0, page_title: 'Shop', route_name: 'shop.product_index'});
     }).catch(err => {
         console.error('Error fetching products:', err);
@@ -10,9 +10,7 @@ exports.index = (req, res, next) => {
 
 exports.show = (req, res, next) => {
     const id = req.params.id;
-    Product.findById(id).then(([rows, _]) => {
-        const product = rows[0];
-        
+    Product.findByPk(id).then(product => {
         if (!product) {
            return res.status(404).render('404', { page_title: 'Product Not Found', route_name: 'error' });
         }

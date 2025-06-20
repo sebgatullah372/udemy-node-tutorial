@@ -1,6 +1,12 @@
+const { where } = require('sequelize');
 const Product = require('../../models/product');
 exports.index = (req, res, next) => {
-   
+    Product.findAll().then(products => {
+        res.render('admin/product-index', { prods: products, hasProducts: products.length > 0, page_title: 'Admin Products', route_name: 'admin.product_index' });
+    }).catch(err => {
+        console.error('Error fetching products:', err);
+        return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+    });
 }
 
 exports.create = (req, res, next) => {
@@ -10,7 +16,7 @@ exports.create = (req, res, next) => {
 exports.store = (req, res, next) => {
     const newProduct = {
         title: req.body.title,
-        imageUrl: req.body.imageUrl,
+        image_url: req.body.imageUrl,
         price: req.body.price,
         description: req.body.description
     }
@@ -25,8 +31,7 @@ exports.store = (req, res, next) => {
 
 exports.edit = (req, res, next) => {
     const id = req.params.id;
-    Product.findById(id).then(([rows, _]) => {
-        const product = rows[0];
+    Product.findByPk(id).then(product => {
         if (!product) {
             return res.status(404).render('404', { page_title: 'Product Not Found', route_name: 'error' });
         }
@@ -40,21 +45,31 @@ exports.edit = (req, res, next) => {
 exports.update = (req, res, next) => {
     const id = req.params.id;
     
-    Product.update(req.body, id).then(() => {
+    Product.update(req.body, 
+        {
+            where : {id: id}
+        }
+    ).then(() => {
         console.log('Product updated successfully');
+        res.redirect('/admin/products');
     }).catch(err => {
         console.error('Error updating product:', err);
         return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
     });
-    res.redirect('/admin/products');
+    
 }
 exports.delete = (req, res, next) => {
     const id = req.params.id;
-    Product.delete(id).then(() => {
+    Product.destroy( 
+        {
+            where : {id: id}
+        }
+    ).then(() => {
         console.log('Product deleted successfully');
+        res.redirect('/admin/products');
     }).catch(err => {
         console.error('Error deleting product:', err);
         return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
     });
-    res.redirect('/admin/products');
+    
 }

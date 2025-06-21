@@ -1,4 +1,3 @@
-const { where } = require('sequelize');
 const Product = require('../../models/product');
 exports.index = (req, res, next) => {
     Product.findAll().then(products => {
@@ -19,7 +18,7 @@ exports.store = (req, res, next) => {
         image_url: req.body.imageUrl,
         price: req.body.price,
         description: req.body.description,
-        user_id: req.user.id
+        user_id: req.session.user.id
     }
     Product.create(newProduct).then(() => {
         console.log('Product created successfully');

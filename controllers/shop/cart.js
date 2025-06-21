@@ -1,7 +1,8 @@
 const Product = require('../../models/product');
 const Cart = require('../../models/cart');
-exports.getMyCart = (req, res, next) => {
-    const user = req.user;
+const { User } = require('../../models');
+exports.getMyCart = async (req, res, next) => {
+    const user = await User.findByPk(req.session.user.id);
     user.getCart().then(cart => {
         if (!cart) {
             return res.render('shop/cart', {
@@ -48,9 +49,9 @@ exports.getMyCart = (req, res, next) => {
    
 }
 
-exports.addToCart = (req, res, next) => {
+exports.addToCart = async (req, res, next) => {
     const productId = req.body.productId;
-    const user = req.user;
+     const user = await User.findByPk(req.session.user.id);
     let fetchedCart;
     user.getCart().then(cart => {
         if(!cart){
@@ -90,7 +91,7 @@ exports.addToCart = (req, res, next) => {
 
 exports.removeFromCart = async (req, res, next) => {
     const productId = req.body.productId;
-    const user = req.user;
+     const user = await User.findByPk(req.session.user.id);
     user.getCart().then(cart => {
         if(!cart){
             return user.createCart();

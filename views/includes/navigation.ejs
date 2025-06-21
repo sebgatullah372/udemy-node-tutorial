@@ -1,14 +1,38 @@
 <header class="main-header">
-    <nav class="main-header__nav">
-        <ul class="main-header__item-list">
-            <li class="main-header__item"><a class="<%= route_name === 'shop.product_index' ? 'active' :'' %>"
-                    href="/">Shop</a></li>
-            <li class="main-header__item"><a class="<%= route_name === 'shop.my_cart' ? 'active' :'' %>"
-                    href="/my-cart">My Cart</a></li>
-            <li class="main-header__item"><a class="<%= route_name === 'admin.product_index' ? 'active' :'' %>"
-                    href="/admin/products">Admin Products</a></li>
-            <li class="main-header__item"><a class="<%= route_name === 'admin.add-product' ? 'active' :'' %>"
-                    href="/admin/add-product">Add Product</a></li>
-        </ul>
-    </nav>
+  <nav class="main-header__nav">
+    <ul class="main-header__item-list main-header__nav-left">
+      <li class="main-header__item">
+        <a class="<%= route_name === 'shop.product_index' ? 'active' :'' %>" href="/">Shop</a>
+      </li>
+      <% if(isAuthenticated) { %>
+        <li class="main-header__item">
+                <a class="<%= route_name === 'shop.my_cart' ? 'active' :'' %>" href="/my-cart">My Cart</a>
+        </li>
+        <li class="main-header__item">
+                <a class="<%= route_name === 'admin.product_index' ? 'active' :'' %>" href="/admin/products">Admin Products</a>
+        </li>
+        <li class="main-header__item">
+                <a class="<%= route_name === 'admin.add-product' ? 'active' :'' %>" href="/admin/add-product">Add Product</a>
+        </li>
+      <% } %>
+    </ul>
+
+    <ul class="main-header__item-list main-header__nav-right">
+        <% if(!isAuthenticated) { %>
+                <li class="main-header__item">
+                        <a class="<%= route_name === 'auth.login' ? 'active' :'' %>" href="/login">Login</a>
+                </li>
+                <li class="main-header__item">
+                        <a class="<%= route_name === 'auth.register' ? 'active' :'' %>" href="/register">Register</a>
+                </li>
+        <% } %>
+        <% if(isAuthenticated) { %>
+                <li class="main-header__item">
+                        <form action="/logout" method="POST">
+                        <button class="btn main-header__logout-btn">Logout</button>
+                        </form>
+                </li>
+        <% } %>        
+    </ul>
+  </nav>
 </header>

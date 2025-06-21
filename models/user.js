@@ -25,4 +25,8 @@ const User = sequelize.define('user', {
     timestamps: true
 });
 
+User.findByEmail = async function(email) {
+    return await User.findOne({ where: { email } });
+};
+
 module.exports = User;

@@ -1,10 +1,11 @@
 const Product = require('../../models/product');
+const errorHandler = require('../../utils/error-handler');
 exports.index = (req, res, next) => {
     Product.findAll().then(products => {
         res.render('admin/product-index', { prods: products, hasProducts: products.length > 0, page_title: 'Admin Products', route_name: 'admin.product_index' });
     }).catch(err => {
         console.error('Error fetching products:', err);
-        return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+        errorHandler.handle500Error(err, req, res, next);
     });
 }
 
@@ -23,8 +24,7 @@ exports.store = (req, res, next) => {
     Product.create(newProduct).then(() => {
         console.log('Product created successfully');
     }).catch(err => {
-        console.error('Error creating product:', err);
-        return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+        errorHandler.handle500Error(err, req, res, next);
     });
     res.redirect('/');
 };
@@ -37,8 +37,7 @@ exports.edit = (req, res, next) => {
         }
         res.render('admin/edit-product', { product: product, page_title: 'Edit Product', route_name: 'admin.edit-product' });
     }).catch(err => {
-        console.error('Error fetching product:', err);
-        return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+        errorHandler.handle500Error(err, req, res, next);
     });  
 }
 
@@ -53,8 +52,7 @@ exports.update = (req, res, next) => {
         console.log('Product updated successfully');
         res.redirect('/admin/products');
     }).catch(err => {
-        console.error('Error updating product:', err);
-        return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+        errorHandler.handle500Error(err, req, res, next);
     });
     
 }
@@ -68,8 +66,7 @@ exports.delete = (req, res, next) => {
         console.log('Product deleted successfully');
         res.redirect('/admin/products');
     }).catch(err => {
-        console.error('Error deleting product:', err);
-        return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+        errorHandler.handle500Error(err, req, res, next);
     });
     
 }

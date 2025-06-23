@@ -1,6 +1,6 @@
 const Product = require('../../models/product');
-const Cart = require('../../models/cart');
-const { User } = require('../../models');
+const  User  = require('../../models/user');
+const errorHandler = require('../../utils/error-handler');
 exports.getMyCart = async (req, res, next) => {
     const user = await User.findByPk(req.session.user.id);
     user.getCart().then(cart => {
@@ -43,7 +43,7 @@ exports.getMyCart = async (req, res, next) => {
         });
     }).catch(err => {
         console.error('Error fetching cart items:', err);
-        return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+        errorHandler.handle500Error(err, req, res, next);
     });
     
    
@@ -84,7 +84,7 @@ exports.addToCart = async (req, res, next) => {
         res.redirect('/my-cart');
     }).catch(err => {
         console.error('Error adding product to cart:', err);
-        return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+        errorHandler.handle500Error(err, req, res, next);
     });
     
 }
@@ -116,6 +116,6 @@ exports.removeFromCart = async (req, res, next) => {
         res.redirect('/my-cart');
     }).catch(err => {
         console.error('Error removing product from cart:', err);
-        return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+        errorHandler.handle500Error(err, req, res, next);
     });
 }

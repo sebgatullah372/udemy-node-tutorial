@@ -1,5 +1,6 @@
 const User = require('../../models/user');
 const bcrypt = require('bcryptjs');
+const errorHandler = require('../../utils/error-handler');
 exports.showLoginForm = (req, res, next) => {
     res.render('auth/login', {
         page_title: 'Login',
@@ -33,11 +34,11 @@ exports.loginUser = (req, res) => {
             
         }).catch(err => {
             console.error('Error comparing passwords:', err);
-            return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+            errorHandler.handle500Error(err, req, res, next);
         });
     }).catch(err => {
         console.error('Error finding user:', err);
-        return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+        errorHandler.handle500Error(err, req, res, next);
     });
 }
 
@@ -75,12 +76,10 @@ exports.registerUser = (req, res) => {
             res.redirect('/login');
         }
         ).catch(err => {
-            console.error('Error registering user:', err);
-            return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+           errorHandler.handle500Error(err, req, res, next);
         });
     }).catch(err => {
-        console.error('Error checking user existence:', err);
-        return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+        errorHandler.handle500Error(err, req, res, next);
     });    
 }
 

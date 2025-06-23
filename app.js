@@ -9,6 +9,7 @@ const MySQLStore = require('express-mysql-session')(session);
 const dbConfig = require('./config/db_config');
 const models = require('./models'); // Import all models to ensure they are registered
 const User = require('./models/user'); // Import User model to check for default user
+const { log } = require('console');
 const app = express();
 
 // app.set('view engine', 'pug');
@@ -52,6 +53,10 @@ app.use((req, res, next)=>{
     res.status(404).render('404', {page_title: 'Page not found', route_name : ''});
 });
 
+app.use((error, req, res, next) => {
+    // res.redirect('/500');
+    return res.status(500).render('500', { page_title: 'Internal Server Error', route_name: 'error' });
+});
 
 sequelize.sync(
     {

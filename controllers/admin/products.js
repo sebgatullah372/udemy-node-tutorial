@@ -1,5 +1,7 @@
 const Product = require('../../models/product');
 const errorHandler = require('../../utils/error-handler');
+const fs = require('fs');
+const path = require('path');
 exports.index = (req, res, next) => {
     Product.findAll().then(products => {
         res.render('admin/product-index', { prods: products, hasProducts: products.length > 0, page_title: 'Admin Products', route_name: 'admin.product_index' });
@@ -14,13 +16,15 @@ exports.create = (req, res, next) => {
 };
 
 exports.store = (req, res, next) => {
+
     const newProduct = {
         title: req.body.title,
-        image_url: req.body.imageUrl,
+        image_url: req.file ? '/uploads/' + req.file.filename : null,
         price: req.body.price,
         description: req.body.description,
         user_id: req.session.user.id
     }
+    
     Product.create(newProduct).then(() => {
         console.log('Product created successfully');
     }).catch(err => {
@@ -43,8 +47,30 @@ exports.edit = (req, res, next) => {
 
 exports.update = (req, res, next) => {
     const id = req.params.id;
-    
-    Product.update(req.body, 
+     const updateProduct = {
+        title: req.body.title,
+        image_url: req.file ? '/uploads/' + req.file.filename : null,
+        price: req.body.price,
+        description: req.body.description,
+        user_id: req.session.user.id
+    }
+    if(req.file) {
+        // If a new file is uploaded, delete the old file
+        Product.findByPk(id).then(product => {
+            if (product && product.image_url) {
+                const oldImagePath = path.join(__dirname, '..', '..', 'public', product.image_url);
+                fs.unlink(oldImagePath, (err) => {
+                    if (err) {
+                        console.error('Error deleting old image:', err);
+                    }
+                });
+            }
+        }).catch(err => {
+            console.error('Error fetching product for image deletion:', err);
+        });
+    }
+
+    Product.update(updateProduct, 
         {
             where : {id: id}
         }
@@ -58,6 +84,19 @@ exports.update = (req, res, next) => {
 }
 exports.delete = (req, res, next) => {
     const id = req.params.id;
+    Product.findByPk(id).then(product => {
+            if (product && product.image_url) {
+                const oldImagePath = path.join(__dirname, '..', '..', 'public', product.image_url);
+                console.log('Deleting old image:', oldImagePath);
+                fs.unlink(oldImagePath, (err) => {
+                    if (err) {
+                        console.error('Error deleting old image:', err);
+                    }
+                });
+            }
+        }).catch(err => {
+            console.error('Error fetching product for image deletion:', err);
+        });
     Product.destroy( 
         {
             where : {id: id}
